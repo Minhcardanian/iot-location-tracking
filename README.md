@@ -5,6 +5,20 @@ The project involves developing a web-based application to track simulated devic
 
 ---
 
+## Specific Problem Addressed
+
+### Problem Statement
+Organizations often face challenges in managing and monitoring asset locations within large campuses, warehouses, or industrial facilities. Traditional GPS tracking solutions require costly hardware, making initial deployments expensive and time-consuming.
+
+### How the Project Solves the Problem
+This project addresses these challenges by:
+- Offering a cost-effective alternative to hardware-based location tracking.
+- Allowing organizations to simulate and test location-tracking strategies virtually before actual deployment.
+- Reducing deployment time by validating systems in a virtual environment first.
+- Facilitating training for personnel in managing asset tracking systems without needing physical devices.
+
+---
+
 ## Technology Stack
 
 ### Backend
