@@ -1,148 +1,149 @@
-# IoT Real-Time Route Optimization Project
+# IoT Real-Time Route Simulation & Synthetic Data Generation Project
 
 ## Project Overview
-This project involves developing a web-based application focused on real-time route optimization and simulated tracking for efficient asset management. The main goal is to allow organizations to simulate, analyze, and optimize routes between locations considering real-time traffic and travel conditions without relying on physical hardware.
+This project develops a web-based simulation environment for real-time route planning and synthetic GPS data generation, enabling asset management and routing analysis without physical hardware.
 
 ---
 
 ## Specific Problem Addressed
 
 ### Problem Statement
-Organizations frequently encounter challenges optimizing asset routes and logistics planning due to fluctuating traffic conditions and costly GPS hardware requirements, especially in areas with limited GPS or connectivity.
+Organizations face difficulties validating logistics routes due to high costs, hardware constraints, and unpredictable real-world conditions.
 
-### How the Project Solves the Problem
-This project addresses these challenges by:
-- Simulating real-time asset movements along optimized routes without needing physical hardware.
-- Providing real-time visualizations and analyses of potential routes to enhance operational decision-making.
-- Reducing costs and improving efficiency by identifying optimal routes in simulated environments.
+### Project Solution
+- Generates synthetic GPS data to simulate asset movement.
+- Provides real-time visualization for strategy evaluation.
+- Reduces costs and facilitates routing strategy experiments virtually.
 
 ---
 
 ## Technology Stack
 
 ### Backend
-
-- **Python (3.9.1)**: Core backend programming language.
-- **Flask (2.1.2)**: RESTful API framework.
-- **CounterFit**: Virtual IoT simulator generating GPS-like data.
-- **SQLite or PostgreSQL**: Database for route data storage and analysis.
+- **Python (3.9.1)**
+- **Flask (2.1.2)**
+- **GPSSimulator** *(optimized synthetic GPS data library instead of CounterFit)*
+- **SQLite/PostgreSQL**
 
 ### Frontend
+- **React.js**
+- **Leaflet.js**
+- **Axios**
 
-- **React.js**: User interface development.
-- **Leaflet.js**: Real-time interactive map visualization.
-- **Axios**: API communication.
-
-### Hosting & Deployment
-
-- **Netlify**: Frontend hosting.
-- **Heroku (or similar)**: Backend hosting.
+### Hosting
+- **Netlify** (Frontend)
+- **Heroku** (Backend)
 
 ---
 
-## System Architecture
+## Workflow & System Architecture
 
 ```mermaid
-graph TD
-
-A[User selects Start and End points on Map] -->|1. Route Request| B[Frontend - React.js]
-B -->|Fetch optimized route| C[Backend API - Flask]
-C -->|Simulated GPS data| D[CounterFit Simulation Layer]
-D -->|Stream simulated GPS data| C[Flask Backend]
-C --> D[(SQLite/PostgreSQL Database)]
-C -->|Real-time visualization| B[Frontend React.js Application]
-B -->|API requests| C
-
-subgraph Backend Layer
-C[Flask API: Route optimization & simulation handling]
-end
-
-subgraph Frontend Layer
-B[React.js: Interactive map visualization & route selection]
-end
-
-subgraph Simulation Layer
-CounterFit --> C
-end
+flowchart TD
+    A[Select Start & End on Map] --> B[React Frontend UI]
+    B --> C[Flask API: Route Request]
+    C --> D[Route Calculation Module]
+    D --> E[GPSSimulator: Synthetic GPS Data]
+    E --> F[Flask API]
+    F --> G[Database Storage]
+    F --> H[WebSocket/REST Updates]
+    H --> B
 ```
 
 ---
 
-## Example Workflow
+## Database Schema & Object Properties
 
-- **Step 1:** User selects two points (Start: Warehouse X, End: Delivery Point Z).
-- **Step 2:** Backend calculates optimized route using real-time traffic data.
-- **Step 3:** CounterFit simulates real-time GPS tracking along optimized route.
-- **Step 4:** Real-time tracking visualization displayed on frontend.
-- **Step 5:** Historical route data stored and analyzed for future optimizations.
+```mermaid
+classDiagram
+    class Route {
+      +String routeId
+      +String startPoint
+      +String endPoint
+      +List~Coordinate~ optimizedPath
+      +Float distance
+      +Time estimatedTime
+      +DateTime createdAt
+    }
+    class GPSData {
+      +String gpsId
+      +String routeId
+      +DateTime timestamp
+      +Float latitude
+      +Float longitude
+      +Float speed
+      +String direction
+    }
+    class Asset {
+      +String assetId
+      +String type
+      +String shape
+      +String color
+      +String currentContainer
+      +Coordinate currentLocation
+      +DateTime lastUpdated
+    }
+
+    Route "1" --> "0..*" GPSData : contains
+    Asset "1" --> "0..*" GPSData : generates
+```
 
 ---
 
 ## Virtual Environment (`venv`) Setup
 
-### 1. Create & Activate Environment
 ```bash
 python3.9 -m venv venv
 source venv/bin/activate
-```
-
-### 2. Install Packages
-```bash
 pip install -r requirements.txt
 ```
-If `requirements.txt` isn't available:
+If no `requirements.txt`:
 ```bash
-pip install counterfit==0.1.4.dev9 Flask==2.1.2 Werkzeug==2.0.3 requests==2.32.3
-```
-
-### 3. Save Dependencies
-```bash
+pip install GPSSimulator Flask==2.1.2 Werkzeug==2.0.3 requests==2.32.3
 pip freeze > requirements.txt
 ```
 
-### 4. Run the Simulation
-Start CounterFit:
+### Running the Simulation
 ```bash
-counterfit
+gpssimulator
 ```
-Then in another terminal:
+In another terminal:
 ```bash
 python app.py
 ```
 
 ---
 
-## SSH Configuration for GitHub Repository
+## GitHub SSH Setup Guide
 
-### **1. Check Existing SSH Key**
+1. **Check SSH Key:**
 ```bash
 ls ~/.ssh/id_rsa.pub
 ```
 
-### **2. Generate SSH Key (if none exists)**
+2. **Generate SSH Key (if not exists):**
 ```bash
 ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
 ```
 
-### **3. Add Key to GitHub**
-- Copy key:
-  ```bash
-  cat ~/.ssh/id_rsa.pub
-  ```
-- Add key to [GitHub SSH Settings](https://github.com/settings/keys).
+3. **Add SSH Key to GitHub:**
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+- Add this key to [GitHub SSH Settings](https://github.com/settings/keys).
 
-### **3. Test Connection**
+4. **Test SSH Connection:**
 ```bash
 ssh -T git@github.com
 ```
 
-### **4. Configure Repository**
+5. **Configure Repo:**
 ```bash
 cd ~/iot-location-tracking
 git remote set-url origin git@github.com:Minhcardanian/iot-location-tracking.git
 ```
 
-### **5. Push Changes**
+6. **Push Updates:**
 ```bash
 git add .
 git commit -m "Configured SSH for GitHub"
@@ -153,9 +154,7 @@ git push origin main
 
 ## Future Enhancements
 
-- Predictive analytics for traffic and route forecasting.
-- Enhanced offline capabilities.
-- Cloud database integration (PostgreSQL/PostGIS).
-
----
+- Enhance realism of synthetic data.
+- Implement advanced dynamic scenario simulations.
+- Integrate scalable cloud databases (PostGIS).
 
