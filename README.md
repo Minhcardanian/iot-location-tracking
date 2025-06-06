@@ -140,7 +140,7 @@ ssh -T git@github.com
 5. **Configure Repo:**
 ```bash
 cd ~/iot-location-tracking
-git remote set-url origin git@github.com:Minhcardanian/iot-location-tracking.git
+git remote set-url origin git@github.com:_____/iot-location-tracking.git
 ```
 
 6. **Push Updates:**
